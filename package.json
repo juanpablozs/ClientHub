@@ -1,0 +1,16 @@
+{
+  "name": "clienthub-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "echo 'Use workspace scripts: npm -w @clienthub/api run dev or npm -w @clienthub/web run dev'",
+    "build": "npm run -w @clienthub/api build && npm run -w @clienthub/web build",
+    "test": "npm run -w @clienthub/api test || true",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx"
+  },
+  "license": "MIT"
+}
