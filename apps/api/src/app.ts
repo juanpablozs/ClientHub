@@ -3,6 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import authRoutes from './routes/auth';
+import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
 
@@ -13,5 +15,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get('/health', (_req, res) => res.json({ ok: true }));
+
+app.use('/api/auth', authRoutes);
+
+app.use(errorHandler);
 
 export default app;
