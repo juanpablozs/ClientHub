@@ -9,6 +9,7 @@ vi.mock('../src/services/authService', () => {
     validatePassword: vi.fn(async () => true),
     saveRefreshToken: vi.fn(async () => ({})),
     findRefreshToken: vi.fn(async (token: string) => ({ token, revoked: false, userId: 'user-1' })),
+    findUserById: vi.fn(async (id: string) => ({ id: 'user-1', email: 'alice@example.com', name: 'Alice' })),
     revokeRefreshToken: vi.fn(async () => ({}))
   } as any;
 });

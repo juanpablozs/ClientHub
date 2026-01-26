@@ -27,8 +27,8 @@ services:
       - '4000:4000'
     depends_on:
       - mysql
-    volumes:
-      - ./apps/api:/usr/src/app
+    # Removed bind-mount to ensure container uses built artifact in image
+    # For development mounts, re-add a suitable dev command or use a separate compose override
 
   web:
     build: ./apps/web

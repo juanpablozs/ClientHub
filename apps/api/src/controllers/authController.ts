@@ -36,6 +36,11 @@ export async function refresh(req: Request, res: Response) {
   try {
     const payload = verifyRefreshToken(token);
     const dbToken = await authService.findRefreshToken(token);
+    if (process.env.NODE_ENV === 'test') {
+      // helpful debug when running unit tests
+      // eslint-disable-next-line no-console
+      console.debug('[auth.refresh] token=', token, 'payload=', payload, 'dbToken=', dbToken);
+    }
     if (!dbToken || dbToken.revoked) return res.status(401).json({ error: 'Invalid refresh token' });
     const accessToken = signAccessToken({ userId: payload.userId });
     const user = await authService.findUserById(payload.userId);
