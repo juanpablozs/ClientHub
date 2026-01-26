@@ -1,14 +1,16 @@
 FROM node:18
 WORKDIR /usr/src/app
 
-# install deps
-COPY package.json package-lock.json* ./
+# copy package and install from repo root context
+COPY apps/api/package.json apps/api/package-lock.json* ./
+COPY package.json ./root-package.json
 RUN npm install
 
-# copy source
-COPY . .
+# copy tsconfig base and api source
+COPY tsconfig.base.json /usr/tsconfig.base.json
+COPY apps/api .
 
-# generate prisma client
+# ensure prisma client generation
 RUN npx prisma generate
 
 # build

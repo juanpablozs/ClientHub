@@ -8,7 +8,7 @@ export async function register(req: Request, res: Response) {
   if (!parsed.success) return res.status(400).json({ error: parsed.error.errors });
   const existing = await authService.findUserByEmail(parsed.data.email);
   if (existing) return res.status(409).json({ error: 'Email already in use' });
-  const user = await authService.createUser(parsed.data);
+  const user = await authService.createUser(parsed.data as { name: string; email: string; password: string });
   const accessToken = signAccessToken({ userId: user.id });
   const refreshToken = signRefreshToken({ userId: user.id });
   await authService.saveRefreshToken(user.id, refreshToken, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
@@ -38,7 +38,8 @@ export async function refresh(req: Request, res: Response) {
     const dbToken = await authService.findRefreshToken(token);
     if (!dbToken || dbToken.revoked) return res.status(401).json({ error: 'Invalid refresh token' });
     const accessToken = signAccessToken({ userId: payload.userId });
-    res.json({ accessToken });
+    const user = await authService.findUserById(payload.userId);
+    res.json({ accessToken, user: user ? { id: user.id, email: user.email, name: user.name } : null });
   } catch (err) {
     return res.status(401).json({ error: 'Invalid refresh token' });
   }

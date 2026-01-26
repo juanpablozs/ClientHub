@@ -23,6 +23,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAccessToken(token);
   }, [token]);
 
+  // On startup, try to refresh access token using httpOnly refresh cookie
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await api.post('/api/auth/refresh');
+        if (res.data?.accessToken) {
+          setTokenState(res.data.accessToken);
+          setUser(res.data.user || null);
+        }
+      } catch (err) {
+        // no-op
+      }
+    })();
+  }, []);
+
   async function login(email: string, password: string) {
     setLoading(true);
     const res = await api.post('/api/auth/login', { email, password });

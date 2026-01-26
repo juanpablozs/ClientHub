@@ -10,6 +10,10 @@ export async function findUserByEmail(email: string) {
   return prisma.user.findUnique({ where: { email } });
 }
 
+export async function findUserById(id: string) {
+  return prisma.user.findUnique({ where: { id } });
+}
+
 export async function validatePassword(user: any, candidate: string) {
   return bcrypt.compare(candidate, user.password);
 }
